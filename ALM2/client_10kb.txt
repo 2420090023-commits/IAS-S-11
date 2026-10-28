@@ -1,0 +1,153 @@
+The history of cryptography stretches back thousands of years, intertwining with
+the evolution of human communication and the perpetual need for secrecy. From the
+earliest substitution ciphers used by the ancient Egyptians to the sophisticated
+algorithms that protect modern digital infrastructure, the art and science of
+encoding information has played a pivotal role in shaping civilizations, winning
+wars, and safeguarding personal privacy.
+
+In ancient Rome, Julius Caesar employed a simple shift cipher — now known as the
+Caesar Cipher — to communicate with his generals on the battlefield. Each letter
+in the plaintext was replaced by a letter a fixed number of positions down the
+alphabet. Although trivially breakable by modern standards, this technique was
+remarkably effective in an era when literacy itself was rare. The Caesar Cipher
+represents one of the earliest known examples of a substitution cipher, and it
+laid the groundwork for centuries of cryptographic development.
+
+During the Renaissance, polyalphabetic ciphers emerged as a significant advance
+over their monoalphabetic predecessors. The Vigenere Cipher, attributed to the
+French diplomat Blaise de Vigenere, used a repeating keyword to shift each letter
+of the plaintext by a variable amount. This made frequency analysis — the primary
+tool for breaking substitution ciphers — significantly more difficult. For nearly
+three centuries, the Vigenere Cipher was considered unbreakable and earned the
+nickname "le chiffre indechiffrable" (the indecipherable cipher).
+
+The advent of mechanical encryption devices in the early twentieth century marked
+another quantum leap. The Enigma machine, developed by the German engineer Arthur
+Scherbius, used a series of rotating electromechanical rotors to scramble
+plaintext messages into seemingly random ciphertext. During World War II, the
+German military relied heavily on the Enigma machine for secure communications.
+The Allied effort to crack the Enigma, spearheaded by the brilliant mathematician
+Alan Turing and his team at Bletchley Park, is widely credited with shortening
+the war by an estimated two years and saving countless lives.
+
+The birth of modern cryptography is often traced to Claude Shannon's landmark
+1949 paper, "Communication Theory of Secrecy Systems," which laid the
+mathematical foundations for provably secure encryption. Shannon demonstrated
+that the one-time pad — a cipher in which the key is as long as the message and
+used only once — provides perfect secrecy, meaning that the ciphertext reveals
+absolutely no information about the plaintext. While impractical for most real-
+world applications due to the difficulty of securely distributing and managing
+such long keys, the one-time pad remains theoretically important as the gold
+standard of cryptographic security.
+
+The 1970s witnessed two revolutionary developments. First, the Data Encryption
+Standard (DES) was adopted by the U.S. National Bureau of Standards (now NIST) as
+a federal standard for encrypting sensitive but unclassified information. DES is a
+symmetric-key block cipher that operates on 64-bit blocks of data using a 56-bit
+key. It employs a Feistel network structure with 16 rounds of substitution and
+permutation operations. Although DES served admirably for over two decades, its
+56-bit key length eventually became vulnerable to brute-force attacks as computing
+power increased exponentially.
+
+Second, and perhaps more importantly, Whitfield Diffie and Martin Hellman
+published their groundbreaking paper "New Directions in Cryptography" in 1976,
+introducing the concept of public-key cryptography. This paradigm-shifting idea
+allowed two parties to establish a shared secret key over an insecure channel
+without having previously exchanged any secret information. The Diffie-Hellman
+key exchange protocol, based on the mathematical difficulty of computing discrete
+logarithms in finite fields, remains widely used today as a fundamental building
+block of secure communication protocols.
+
+Shortly after, Ron Rivest, Adi Shamir, and Leonard Adleman developed the RSA
+algorithm, the first practical public-key cryptosystem. RSA relies on the
+computational difficulty of factoring the product of two large prime numbers.
+The algorithm enables both encryption and digital signatures, making it one of
+the most versatile and widely deployed cryptographic algorithms in history. RSA
+key sizes have grown over the years — from 512 bits in the early days to 2048 or
+4096 bits today — to keep pace with advances in factoring algorithms and
+computational power.
+
+As DES reached the end of its useful life, the search for a replacement led to
+the Advanced Encryption Standard (AES) competition, organized by NIST in 1997.
+After a rigorous multi-year evaluation process involving fifteen candidate
+algorithms from around the world, the Rijndael cipher — designed by the Belgian
+cryptographers Joan Daemen and Vincent Rijmen — was selected as the new standard
+in 2001. AES supports key sizes of 128, 192, and 256 bits, and operates on 128-
+bit blocks of data. It uses a substitution-permutation network (SPN) architecture
+with 10, 12, or 14 rounds depending on the key size.
+
+AES has become the de facto global standard for symmetric encryption. It is used
+to protect classified U.S. government information, secure financial transactions,
+encrypt internet traffic via TLS and HTTPS, and safeguard data at rest in storage
+systems worldwide. The algorithm's elegant mathematical structure, combined with
+its resistance to all known cryptanalytic attacks and its efficiency in both
+software and hardware implementations, has earned it the trust of governments,
+corporations, and individuals alike.
+
+The AES algorithm operates through a series of well-defined transformations
+applied to a 4x4 matrix of bytes called the State. Each round consists of four
+main operations: SubBytes (a non-linear byte substitution using a fixed lookup
+table called the S-box), ShiftRows (a cyclic shift of each row by a different
+offset), MixColumns (a linear mixing operation on the columns using polynomial
+multiplication over a Galois field), and AddRoundKey (an XOR operation with a
+portion of the expanded key). The final round omits the MixColumns step.
+
+The key expansion algorithm, also known as the Rijndael key schedule, derives a
+series of round keys from the original cipher key. For AES-256, the original
+256-bit key is expanded into fifteen 128-bit round keys (one for the initial
+AddRoundKey step plus one for each of the fourteen rounds). The key schedule uses
+a combination of byte substitution, rotation, and XOR operations with round
+constants to ensure that each round key is cryptographically distinct from the
+original key and from every other round key.
+
+Modern cryptographic practice employs AES in various modes of operation to handle
+data of arbitrary length. The most common modes include Electronic Codebook (ECB),
+which encrypts each block independently (not recommended for most applications
+due to pattern leakage); Cipher Block Chaining (CBC), which XORs each plaintext
+block with the previous ciphertext block before encryption; Counter Mode (CTR),
+which converts the block cipher into a stream cipher by encrypting successive
+counter values; and Galois Counter Mode (GCM), which provides both authenticated
+encryption and data integrity verification.
+
+In this laboratory exercise, we implement AES-256 in CBC mode using the
+PyCryptodome library, a self-contained Python package of low-level cryptographic
+primitives. PyCryptodome provides production-quality implementations of AES and
+other algorithms, rigorously tested against official test vectors and optimized
+for performance. By using PyCryptodome, we can focus on understanding the
+protocol-level aspects of secure communication — key management, initialization
+vector generation, padding, and network transmission — while relying on a
+trusted library for the core cryptographic operations.
+
+The client-server architecture demonstrated in this task mirrors the fundamental
+structure of real-world secure communication systems. The client generates a
+random AES-256 key, encrypts a plaintext message, and transmits the ciphertext
+along with the initialization vector to the server. The server uses the shared
+key to decrypt the message, verifying that the decrypted plaintext matches the
+original. The same process is then reversed, with the server encrypting its own
+message and sending it back to the client for decryption.
+
+This bidirectional encrypted file transfer demonstrates several important
+security principles: confidentiality (the plaintext is never transmitted in the
+clear), key management (the AES key must be securely shared between the
+communicating parties), initialization vector uniqueness (a fresh random IV is
+generated for each encryption operation to ensure semantic security), and data
+integrity (any modification to the ciphertext during transmission will result in
+garbled plaintext upon decryption, alerting the recipient to potential tampering).
+
+As we continue to advance into an era of quantum computing, the field of
+cryptography faces new challenges and opportunities. Quantum computers, once
+sufficiently powerful, could theoretically break many of the public-key
+algorithms currently in use, including RSA and elliptic curve cryptography.
+However, symmetric algorithms like AES are expected to remain secure against
+quantum attacks, provided that key sizes are doubled (e.g., AES-256 instead of
+AES-128) to account for Grover's algorithm, which effectively halves the
+security level of symmetric ciphers.
+
+The ongoing development of post-quantum cryptographic algorithms, standardized
+through NIST's Post-Quantum Cryptography initiative, represents the next
+frontier in the eternal battle between codemakers and codebreakers. Lattice-based
+schemes such as CRYSTALS-Kyber (for key encapsulation) and CRYSTALS-Dilithium
+(for digital signatures) are expected to provide security against both classical
+and quantum adversaries. These new algorithms will eventually complement or
+replace the RSA and ECC algorithms currently securing the world's digital
+infrastructure, while AES continues to serve as the re
